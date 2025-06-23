@@ -16,6 +16,10 @@ class Knight:
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
 
+    def rect(self):
+        return pygame.Rect(self.x, self.y, self.image_still.get_width(), self.image_still.get_height())
+
+
 class Platform:
     def __init__(self, x, y, width, height, color=(0,0,0)):
         self.rect = pygame.Rect(x, y, width, height)
@@ -55,6 +59,7 @@ class ExpOrb:
     def draw(self):
         pygame.draw.circle(self.screen, "Yellow", (int(self.x), int(self.y)), self.radius)
 
+
 def main():
     pygame.init()
     image1 = pygame.image.load("output-onlinepngtools.jpg")
@@ -65,7 +70,7 @@ def main():
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
     pygame.display.set_caption("lethally Project")
     screen = pygame.display.set_mode((1280, 720))
-    knight = my_character.Character(screen, 100, 500)
+    knight = Knight(screen, 100, 422)
 
     platform1 = Platform(0, 550, 1500, 350, )
     platform2 = Platform(0, 550, 1500, 350, )
@@ -104,7 +109,15 @@ def main():
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
         if pressed_keys[pygame.K_SPACE]:
-            knight.y = knight.y - 12
+            knight.velocity_y = -15
+
+        # TODO: use physics to move knight.y
+        # TODO: apply gravity to change velocity
+        # TODO: collision detection for landing on ground
+        for platform in platforms:
+            if knight.rect().colliderect(platform.rect) and knight.velocity_y >= 0:
+                knight.y = platform.rect.top - knight.rect().height
+                knight.velocity_y = 0
 
         knight.draw()
         pygame.draw.rect(screen, color1 , ground_rect)
@@ -119,6 +132,8 @@ def main():
         # TODO: Add your project code
         for platform in platforms:
              platform.draw(screen)
+
+
 
         # knight.update()
         # don't forget the update, otherwise nothing will show up!
