@@ -16,27 +16,20 @@ class Knight:
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
 
-class Platform:
-    def __init__(self, x, y, width, height, color=(0,0,0)):
-
 def main():
     pygame.init()
     image1 = pygame.image.load("output-onlinepngtools.jpg")
     color1 = pygame.Color('black')
-    pygame.mixer.music.load("https: // youtu.be / WeVLw9GJbWM")
     ground_height = 10
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
     pygame.display.set_caption("lethally Project")
-    # TODO: Change the size of the screen as you see fit!
     screen = pygame.display.set_mode((1280, 720))
-    # creates a Character from the my_character.py file
-    knight = my_character.Character(screen, 100, 500)
+    knight = my_character.Character(screen, 100, 550)
 
 
-    # let's set the framerate
     clock = pygame.time.Clock()
     while True:
-        clock.tick(60)  # this sets the framerate of your game
+        clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -47,22 +40,13 @@ def main():
             knight.x = knight.x - 5
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
-        if pressed_keys[pygame.K_SPACE]:
-            knight.y = knight.y - 15
-
+        
         knight.draw()
         pygame.draw.rect(screen, color1 , ground_rect)
             # TODO: Add you events code
 
-        # TODO: Fill the screen with whatever background color you like!
- # screen.fill((255, 255, 255))
-
-        # draws the character every frame
-        #character.draw()
-
         # TODO: Add your project code
 
-        # don't forget the update, otherwise nothing will show up!
         pygame.display.update()
 
 
