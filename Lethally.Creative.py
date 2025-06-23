@@ -46,20 +46,17 @@ def main():
     image1 = pygame.image.load("output-onlinepngtools.jpg")
     color1 = pygame.Color('black')
     pygame.mixer.music.load("The Trooper (1998 Remaster).mp3")
-    pygame.mixer.music.play()
+    pygame.mixer.music.play(-1)
     ground_height = 10
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
     pygame.display.set_caption("lethally Project")
-    # done: Change the size of the screen as you see fit!
     screen = pygame.display.set_mode((1280, 720))
-    # creates a Character from the my_character.py file
     knight = my_character.Character(screen, 100, 500)
 
 
-    # let's set the framerate
     clock = pygame.time.Clock()
     while True:
-        clock.tick(60)  # this sets the framerate of your game
+        clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
