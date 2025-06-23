@@ -26,16 +26,6 @@ BLUE = (0,0,255)
 YELLOW = (255,255,0)
 GROUND_HEIGHT= 100
 
-class Character:
-    def __init__(self, screen, x, y):
-        self.screen = screen
-        self.x = x
-        self.y = y
-        self.y = y
-        self.width = 50
-        self.height = 50
-        self.speed = 5
-        self.rect = pygame.Rect(x, y, self.width, self.height)
 
     def update(self ):
         keys = pygame.key.get_pressed()
@@ -46,8 +36,38 @@ class Character:
         if keys[pygame.K_RIGHT] and self.x < WIDTH - self.width:
             self.x += self.speed
 
-        
+        self.rect.x = self.x
+        self.rect.y = self.y
 
+class Enemy:
+    def _init_(self, screen, x, y ):
+        self.screen = screen
+        self.x = x
+        self.y = y
+        self.width = 40
+        self.height = 40
+        self.speed = random.randint(1,3)
+        self.rect = pygame.Rect(x, y, self.width, self.width, self.height)
+
+    def update(self):
+        self.x -= self.speed
+        self.rect.x = self.x
+
+    "Add draw for enemy here"
+
+    def is_off_screen(self):
+        return self.x < -self.width
+
+class ExpOrb:
+    def _init_(self, screen, x, y ):
+        self.screen = screen
+        self.x = x
+        self.y = y
+        self.radius = 8
+        self.rect = pygame.Rect(x - self.radius, y - self.radius, self.radius * 2, self.radius * 2)
+
+    def draw (self):
+        pygame.draw.circle(self.screen, YELLOW, (int (self.x), int (self.y)), self.radius)
 
 def main():
     # turn on pygame
@@ -56,12 +76,12 @@ def main():
     image1 = pygame.image.load("output-onlinepngtools.jpg")
     color1 = pygame.Color('black')
     ground_height = 100
-    ground_rect = pygame.Rect(0, HEIGHT - ground_height)
+    ground_rect = pygame.Rect(0, HEIGHT - GROUND_HEIGHT)
     # create a screen
     pygame.display.set_caption("lethally Project")
     # TODO: Change the size of the screen as you see fit!
     screen = pygame.display.set_mode((1280, 720))
-    # creates a Character from the my_character.py file
+    # creates a character from the my_character.py file
     character = my_character.Character(screen, 100, 500)
 
     # let's set the framerate
