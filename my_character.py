@@ -12,7 +12,7 @@ class Character:
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
 
-# This function is called when you run this file, and is used to test the Character class individually.
+# This function is called when you run this file, and is used to test the character class individually.
 # When you create more files with different classes, copy the code below, then
 # change it to properly test that class
 def test_character():
