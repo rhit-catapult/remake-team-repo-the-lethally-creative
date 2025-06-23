@@ -7,11 +7,12 @@ class Character:
         self.screen = screen
         self.x = x
         self.y = y
+        self.image_still = pygame.image.load("Idle.png")
 
     def draw(self):
-        pygame.draw.rect(self.screen, "blue", (self.x, self.y, 20, 20))
-        pygame.draw.circle(self.screen, "red", (self.x + 5, self.y + 5), 3)
-        pygame.draw.circle(self.screen, "red", (self.x + 15, self.y + 5), 3)
+            self.screen.blit(self.image_still, (self.x, self.y))
+
+
 
 
 # This function is called when you run this file, and is used to test the Character class individually.

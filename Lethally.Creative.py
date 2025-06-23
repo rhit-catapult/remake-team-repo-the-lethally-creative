@@ -18,7 +18,11 @@ class Knight:
 
 class Platform:
     def __init__(self, x, y, width, height, color=(0,0,0)):
-        
+        self.rect = pygame.Rect(x, y, width, height)
+        self.color = color
+
+    def draw(self, screen):
+            pygame.draw.rect(screen, self.color, self.rect)
 
 WIDTH = 1280
 HEIGHT = 720
@@ -42,6 +46,10 @@ def main():
     screen = pygame.display.set_mode((1280, 720))
     # creates a Character from the my_character.py file
     knight = my_character.Character(screen, 100, 500)
+
+    platform1 = Platform(0, 550, 1500, 350, )
+    platform2 = Platform(0, 550, 1500, 350, )
+    platforms = [platform1, platform2]
 
 
     # let's set the framerate
@@ -72,6 +80,8 @@ def main():
         #character.draw()
 
         # TODO: Add your project code
+        for platform in platforms:
+             platform.draw(screen)
 
         # don't forget the update, otherwise nothing will show up!
         pygame.display.update()
