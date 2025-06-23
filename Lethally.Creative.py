@@ -40,7 +40,7 @@ class Enemy:
 
     def draw(self):
         pass
-        # pygame.draw.
+        pygame.draw.
 
     def is_off_screen(self):
         return self.x < - self.width
@@ -65,7 +65,7 @@ def main():
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
     pygame.display.set_caption("lethally Project")
     screen = pygame.display.set_mode((1280, 720))
-    knight = my_character.Character(screen, 100, 500)
+    knight = my_character.Character(screen, 100, 422)
 
     platform1 = Platform(0, 550, 1500, 350, )
     platform2 = Platform(0, 550, 1500, 350, )
