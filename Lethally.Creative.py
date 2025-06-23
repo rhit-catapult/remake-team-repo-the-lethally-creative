@@ -46,9 +46,41 @@ class Character:
         if keys[pygame.K_RIGHT] and self.x < WIDTH - self.width:
             self.x += self.speed
 
-        
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+    def draw(self):
 
 
+class Enemy:
+    def _init_(self, screen, x, y):
+        self.screen = screen
+        self.x = x
+        self.y = y
+        self.width = 40
+        self.height = 40
+        self.speed = random.randint(1,3)
+        self.rect = pygame.Rect(x, y, self.width, self.height)
+
+    def update(self):
+        self.x -= self.speed
+        self.rect.x = self.x
+
+    def draw(self):
+        pygame.draw.
+
+    def is_off_screen(self):
+
+        return self.x <- self.width
+
+class ExpOrb:
+    def _init_(self, screen, x, y):
+        self.screen = screen
+        self.x = x
+        self.y = y
+        self.radius = 8
+        self.rect = pygame.Rect(x - self.radius, y - self.radius, self.radius * 2,self.radius * 2)
 def main():
     # turn on pygame
     pygame.init()
