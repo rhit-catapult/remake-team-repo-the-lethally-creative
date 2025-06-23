@@ -97,7 +97,7 @@ def main():
 
 
 
-    pygame.draw.rect( screen, color1 , gorund_rect )
+        pygame.draw.rect( screen, color1 , ground_rect )
             # TODO: Add you events code
 
         # TODO: Fill the screen with whatever background color you like!
