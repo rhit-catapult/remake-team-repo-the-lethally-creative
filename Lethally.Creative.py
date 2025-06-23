@@ -12,6 +12,7 @@ class Knight:
         self.x = x
         self.y = y
         self.image_still = pygame.image.load("Idle.png")
+        self.velocity_y = 0
 
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
@@ -38,6 +39,9 @@ class Enemy:
         self.speed = random.randint(1, 3)
         self.rect = pygame.Rect(x, y, x, y)
 
+    def rect(knight):
+        return pygame.Rect(knight.x, knight.y,knight.image_still.get_width(),knight.image_still.get_height())
+
     def update(self):
         self.x -= self.speed
         self.rect.x = self.x
@@ -48,6 +52,16 @@ class Enemy:
 
     def is_off_screen(self):
         return self.x < - self.width
+
+
+WIDTH = 1280
+HEIGHT = 720
+WHITE = (255,255,255)
+BLACK = (0,0,0)
+RED = (255,0,0)
+GREEN = (0,255,0)
+BLUE = (0,0,255)
+YELLOW = (255,255,0)
 
 class ExpOrb:
     def _init_(self, screen, x, y):
@@ -119,9 +133,16 @@ def main():
                 knight.y = platform.rect.top - knight.rect().height
                 knight.velocity_y = 0
 
+        knight.velocity_y +=1
+        knight.velocity_y += knight.velocity_y
+
         knight.draw()
         pygame.draw.rect(screen, color1 , ground_rect)
             # TODO: Add you events code
+        for platform in platforms:
+            if knight.rect().colliderect(platform.rect) and knight.velocity_y > 0:
+                knight.y = platform.rect.top - knight.rect().height
+                knight.velocity_y = 0
 
         # TODO: Fill the screen with whatever background color you like!
  # screen.fill((255, 255, 255))
