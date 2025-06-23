@@ -39,12 +39,12 @@ class Knight:
 class Platform:
     def __init__(self, x, y, width, height, color=(0,0,0)):
 
-            def update(self):
-                self.x -= self.speed
-                self.rect.x = self.x
+    def update(self):
+        self.x = self.speed
+        self.rect.x = self.x
 
-            def draw(self):
-                pygame.draw.
+    def is_off_screen(self):
+        return self.x < self.width
 
             def is_off_screen(self):
                 return self.x < - self.width
@@ -63,7 +63,8 @@ def main():
     pygame.init()
     image1 = pygame.image.load("output-onlinepngtools.jpg")
     color1 = pygame.Color('black')
-    pygame.mixer.music.load("https: // youtu.be / WeVLw9GJbWM")
+    pygame.mixer.music.load("The Trooper (1998 Remaster).mp3")
+    pygame.mixer.music.play()
     ground_height = 10
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
     pygame.display.set_caption("lethally Project")
@@ -106,7 +107,7 @@ def main():
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
         if pressed_keys[pygame.K_SPACE]:
-            knight.y = knight.y - 15
+            knight.y = knight.y - 12
 
         knight.draw()
         pygame.draw.rect(screen, color1 , ground_rect)
