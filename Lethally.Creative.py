@@ -16,38 +16,26 @@ class Knight:
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
 
-        class Enemy:
-            def _init_(self, screen, x, y):
-                self.screen = screen
-                self.x = x
-                self.y = y
-                self.width = 40
-                self.height = 40
-                self.speed = random.randint(1, 3)
-                self.rect = pygame.Rect(x, y, self)
-
-                def update(self):
-                    self.x -= self.speed
-                    self.rect.x = self.x
-
-                def draw(self):
-                    pygame.draw.
-
-                def is_off_screen(self):
-                    return self.x < - self.width
-
-class Platform:
-    def __init__(self, x, y, width, height, color=(0,0,0)):
+class Enemy:
+    def _init_(self, screen, x, y):
+        self.screen = screen
+        self.x = x
+        self.y = y
+        self.width = 40
+        self.height = 40
+        self.speed = random.randint(1, 3)
+        self.rect = pygame.Rect(x, y, x, y)
 
     def update(self):
-        self.x = self.speed
+        self.x -= self.speed
         self.rect.x = self.x
 
-    def is_off_screen(self):
-        return self.x < self.width
+    def draw(self):
+        pass
+        # pygame.draw.
 
-            def is_off_screen(self):
-                return self.x < - self.width
+    def is_off_screen(self):
+        return self.x < - self.width
 
 class ExpOrb:
     def _init_(self, screen, x, y):
@@ -112,16 +100,9 @@ def main():
         knight.draw()
         pygame.draw.rect(screen, color1 , ground_rect)
 
-        knight.update()
-
-
-
-
-
-
-
-# don't forget the update, otherwise nothing will show up!
-pygame.display.update()
+        # knight.update()
+        # don't forget the update, otherwise nothing will show up!
+        pygame.display.update()
 
 
 main()
