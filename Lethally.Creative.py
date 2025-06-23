@@ -18,6 +18,33 @@ class Knight:
 
 class Platform:
     def __init__(self, x, y, width, height, color=(0,0,0)):
+        class Enemy:
+            def _init_(self, screen, x, y):
+                self.screen = screen
+                self.x = x
+                self.y = y
+                self.width = 40
+                self.height = 40
+                self.speed = random.randint(1, 3)
+                self.rect = pygame.Rect(x, y, self.width, self.height)
+
+            def update(self):
+                self.x -= self.speed
+                self.rect.x = self.x
+
+            def draw(self):
+                pygame.draw.
+
+            def is_off_screen(self):
+                return self.x < - self.width
+
+        class ExpOrb:
+            def _init_(self, screen, x, y):
+                self.screen = screen
+                self.x = x
+                self.y = y
+                self.radius = 8
+                self.rect = pygame.Rect(x - self.radius, y - self.radius, self.radius * 2, self.radius * 2)
 
 def main():
     pygame.init()
@@ -27,7 +54,7 @@ def main():
     ground_height = 10
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
     pygame.display.set_caption("lethally Project")
-    # TODO: Change the size of the screen as you see fit!
+    # done: Change the size of the screen as you see fit!
     screen = pygame.display.set_mode((1280, 720))
     # creates a Character from the my_character.py file
     knight = my_character.Character(screen, 100, 500)
