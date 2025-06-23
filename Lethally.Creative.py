@@ -24,25 +24,47 @@ class Platform:
     def draw(self, screen):
             pygame.draw.rect(screen, self.color, self.rect)
 
-WIDTH = 1280
-HEIGHT = 720
-WHITE = (255,255,255)
-BLACK = (0,0,0)
-RED = (255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
-YELLOW = (255,255,0)
+class Enemy:
+    def _init_(self, screen, x, y):
+        self.screen = screen
+        self.x = x
+        self.y = y
+        self.width = 40
+        self.height = 40
+        self.speed = random.randint(1, 3)
+        self.rect = pygame.Rect(x, y, x, y)
 
+    def update(self):
+        self.x -= self.speed
+        self.rect.x = self.x
 
+    def draw(self):
+        pass
+        # pygame.draw.
+
+    def is_off_screen(self):
+        return self.x < - self.width
+
+class ExpOrb:
+    def _init_(self, screen, x, y):
+             self.screen = screen
+             self.x = x
+             self.y = y
+             self.radius = 8
+             self.rect = pygame.Rect(x - self.radius, y - self.radius, self.radius * 2, self.radius * 2)
+    def draw(self):
+        pygame.draw.circle(self.screen, "Yellow", (int(self.x), int(self.y)), self.radius)
 
 def main():
     pygame.init()
     image1 = pygame.image.load("output-onlinepngtools.jpg")
     color1 = pygame.Color('black')
+    pygame.mixer.music.load("The Trooper (1998 Remaster).mp3")
+    pygame.mixer.music.play()
     ground_height = 10
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
     pygame.display.set_caption("lethally Project")
-    # TODO: Change the size of the screen as you see fit!
+    # done: Change the size of the screen as you see fit!
     screen = pygame.display.set_mode((1280, 720))
     # creates a Character from the my_character.py file
     knight = my_character.Character(screen, 100, 500)
@@ -50,6 +72,24 @@ def main():
     platform1 = Platform(0, 550, 1500, 350, )
     platform2 = Platform(0, 550, 1500, 350, )
     platforms = [platform1, platform2]
+
+
+    enemies = []
+    exp_orbs =[]
+
+    level = 1
+    exp_points = 0
+    exp_needed = 10
+    score = 0
+
+    try:
+        font = pygame.font.Font(None, 36)
+    except pygame.error:
+        font = pygame.font.SysFont("Arial", 36)
+
+    enemy_spawn_timer = 0
+    enemy_spawn_delay = 120
+
 
 
     # let's set the framerate
@@ -67,7 +107,7 @@ def main():
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
         if pressed_keys[pygame.K_SPACE]:
-            knight.y = knight.y - 15
+            knight.y = knight.y - 12
 
         knight.draw()
         pygame.draw.rect(screen, color1 , ground_rect)
@@ -83,6 +123,7 @@ def main():
         for platform in platforms:
              platform.draw(screen)
 
+        # knight.update()
         # don't forget the update, otherwise nothing will show up!
         pygame.display.update()
 
