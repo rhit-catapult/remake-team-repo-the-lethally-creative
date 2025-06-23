@@ -18,23 +18,12 @@ class Knight:
 
 class Platform:
     def __init__(self, x, y, width, height, color=(0,0,0)):
-        
-
-WIDTH = 1280
-HEIGHT = 720
-WHITE = (255,255,255)
-BLACK = (0,0,0)
-RED = (255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
-YELLOW = (255,255,0)
-
-
 
 def main():
     pygame.init()
     image1 = pygame.image.load("output-onlinepngtools.jpg")
     color1 = pygame.Color('black')
+    pygame.mixer.music.load("https: // youtu.be / WeVLw9GJbWM")
     ground_height = 10
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
     pygame.display.set_caption("lethally Project")
