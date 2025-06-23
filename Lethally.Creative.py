@@ -16,8 +16,6 @@ class Knight:
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
 
-class Platform:
-    def __init__(self, x, y, width, height, color=(0,0,0)):
         class Enemy:
             def _init_(self, screen, x, y):
                 self.screen = screen
@@ -26,7 +24,20 @@ class Platform:
                 self.width = 40
                 self.height = 40
                 self.speed = random.randint(1, 3)
-                self.rect = pygame.Rect(x, y, self.width, self.height)
+                self.rect = pygame.Rect(x, y, self)
+
+                def update(self):
+                    self.x -= self.speed
+                    self.rect.x = self.x
+
+                def draw(self):
+                    pygame.draw.
+
+                def is_off_screen(self):
+                    return self.x < - self.width
+
+class Platform:
+    def __init__(self, x, y, width, height, color=(0,0,0)):
 
             def update(self):
                 self.x -= self.speed
@@ -38,13 +49,15 @@ class Platform:
             def is_off_screen(self):
                 return self.x < - self.width
 
-        class ExpOrb:
-            def _init_(self, screen, x, y):
-                self.screen = screen
-                self.x = x
-                self.y = y
-                self.radius = 8
-                self.rect = pygame.Rect(x - self.radius, y - self.radius, self.radius * 2, self.radius * 2)
+class ExpOrb:
+    def _init_(self, screen, x, y):
+             self.screen = screen
+             self.x = x
+             self.y = y
+             self.radius = 8
+             self.rect = pygame.Rect(x - self.radius, y - self.radius, self.radius * 2, self.radius * 2)
+    def draw(self):
+        pygame.draw.circle(self.screen, "Yellow", (int(self.x), int(self.y)), self.radius)
 
 def main():
     pygame.init()
@@ -58,6 +71,24 @@ def main():
     screen = pygame.display.set_mode((1280, 720))
     # creates a Character from the my_character.py file
     knight = my_character.Character(screen, 100, 500)
+
+
+    enemies = []
+    exp_orbs =[]
+
+    level = 1
+    exp_points = 0
+    exp_needed = 10
+    score = 0
+
+    try:
+        font = pygame.font.Font(None, 36)
+    except pygame.error:
+        font = pygame.font.SysFont("Arial", 36)
+
+    enemy_spawn_timer = 0
+    enemy_spawn_delay = 120
+
 
 
     # let's set the framerate
@@ -79,18 +110,17 @@ def main():
 
         knight.draw()
         pygame.draw.rect(screen, color1 , ground_rect)
-            # TODO: Add you events code
 
-        # TODO: Fill the screen with whatever background color you like!
- # screen.fill((255, 255, 255))
+        knight.update()
 
-        # draws the character every frame
-        #character.draw()
 
-        # TODO: Add your project code
 
-        # don't forget the update, otherwise nothing will show up!
-        pygame.display.update()
+
+
+
+
+# don't forget the update, otherwise nothing will show up!
+pygame.display.update()
 
 
 main()
