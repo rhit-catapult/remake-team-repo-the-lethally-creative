@@ -84,6 +84,7 @@ def main():
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
     pygame.display.set_caption("lethally Project")
     screen = pygame.display.set_mode((1280, 720))
+
     knight = Knight(screen, 100, 422)
 
     platform1 = Platform(0, 550, 1500, 350, )
