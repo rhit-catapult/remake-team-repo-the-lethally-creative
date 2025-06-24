@@ -1,4 +1,4 @@
-from pickle import REDUCE
+
 
 import pygame
 import sys
@@ -13,10 +13,34 @@ class Knight:
         self.y = y
         self.image_still = pygame.image.load("Idle.png")
         self.velocity_y = 0
+        self.health = 100
+
+        self.max_health = 100
+
+        self.is_attacking = False
+
+        self.attack_cooldown = 0
+
+        self.last_attack_time = 0
+
+        self.attack_duration = 200
 
 
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
+
+        health_bar_width = 85
+
+        health_bar_height = 15
+
+        health_bar_x = self.x + 6
+
+        health_bar_y = self.y - 15
+
+        current_health_width = (self.health / self.max_health * health_bar_width)
+
+        pygame.draw.rect(self.screen, (0, 0, 255),(health_bar_x, health_bar_y, health_bar_width, health_bar_height))
+        pygame.draw.rect(self.screen, (0, 255, 0),(health_bar_x,health_bar_y,current_health_width, health_bar_height))
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.image_still.get_width(), self.image_still.get_height())
@@ -73,7 +97,7 @@ YELLOW = (255,255,0)
 GRAY = (128, 128, 128)
 
 class ExpOrb:
-    def _init_(self, screen, x, y):
+    def __init__(self, screen, x, y):
              self.screen = screen
              self.x = x
              self.y = y
@@ -82,7 +106,7 @@ class ExpOrb:
     def draw(self):
         pygame.draw.circle(self.screen, "Yellow", (int(self.x), int(self.y)), self.radius)
 
-def game_over_screen(screen, score, level):
+def game_over_screen(screen, score, level, song_length):
     font = pygame.font.Font(None, 48)
     small_font = pygame.font.Font(None, 36)
 
@@ -99,6 +123,8 @@ def game_over_screen(screen, score, level):
         screen.blit(rentry_msg, (WIDTH // 2 - rentry_msg.get_width() // 2, 380))
         pygame.display.flip()
 
+
+
 def main():
     pygame.init()
     image1 = pygame.image.load("output-onlinepngtools.jpg")
@@ -114,14 +140,18 @@ def main():
     pygame.display.set_caption("Skeleton Slayer")
     screen = pygame.display.set_mode((1280, 720))
 
-    knight = Knight(screen, 100, 422)
+    knight = Knight(screen, 100, 400)
 
     platform1 = Platform(0, 550, 1500, 350, )
     platform2 = Platform(0, 550, 1500, 350, )
     platforms = [platform1, platform2]
 
 
+    enemies = []
+
+
     enemies = [Enemy(screen, random.randint(600, 1200), 510) for _ in range(3)]
+
 
     exp_orbs =[]
 
@@ -139,6 +169,10 @@ def main():
     enemy_spawn_timer = 0
     enemy_spawn_delay = 120
 
+    gravity = 1
+
+    ground_y = 400
+
 
 
     clock = pygame.time.Clock()
@@ -146,7 +180,23 @@ def main():
         clock.tick(60)
         elapsed_time = time.time() - start_time
         if elapsed_time >= song_length:
-            return game_over_screen(screen, score, level)
+            return game_over_screen(screen, score, level, song_length)
+
+
+        #for event in pygame.event.get():
+            #if event.type == pygame.QUIT:
+                #pygame.quit()
+                #sys.exit()
+            #if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+                    #elapsed_time = song_length + 1
+            #if event.type == pygame.KEYDOWN:
+                #if event.key == pygame.K_q:
+                    #pygame.quit()
+                #sys.exit()
+            #elif event.key == pygame.K_r:
+                #return True
+
+
 
 
         for event in pygame.event.get():
@@ -159,12 +209,30 @@ def main():
             knight.x = knight.x - 5
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
+
+        if pressed_keys[pygame.K_SPACE]:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE] and knight == ground_y:
+                knight.velocity_y = -15
+
+        # TODO: use physics to move knight
+        knight.y += knight.velocity_y
+
+
+        if knight.y > ground_y:
+            knight.y = ground_y
+
+            knight.velocity_y = 0
+
+
+
         if pressed_keys[pygame.K_SPACE] and knight.velocity_y == 0:
-            knight.velocity_y = -15
+            knight.velocity_y = -10
 
         knight.velocity_y += 1
         knight.y += knight.velocity_y
         # TODO: use physics to move knight.y
+
         # TODO: apply gravity to change velocity
         # TODO: collision detection for landing on ground
         for platform in platforms:
@@ -177,6 +245,7 @@ def main():
             platform.draw(screen)
 
 
+
             # TODO: Add you events code
 
 
@@ -187,8 +256,27 @@ def main():
         for platform in platforms:
              platform.draw(screen)
 
+
         for enemy in enemies[:]:
             enemy.update()
+        #if knight.rect().colliderect(enemy.rect) and enemy.alive:
+            exp_orbs.append(enemy.hit())
+            score += 20
+            if not enemy.alive:
+                enemies.remove(enemy)
+            #else:
+               # enemy.draw()
+
+       # for enemy in enemies[:]:
+            #enemy.update()
+        #if knight.rect().colliderect(enemy.rect) and enemy.alive:
+            #exp_orbs.append(enemy.hit())
+            #score += 20
+            #if not enemy.alive:
+                #enemies.remove(enemy)
+            #else:
+                #enemy.draw()
+
         #if knight.rect().colliderect(enemy.rect) and enemy.alive:
             #if not enemy.alive:
             #enemies.remove(enemy)
@@ -208,15 +296,15 @@ def main():
             orb.draw()
 
         remaining_time = max(0, int(song_length - elapsed_time))
-        timer_display = font.render(f"Time: {remaining_time}", True, BLACK)
+        #timer_display = font.render(f"Time: {remaining_time}", True, BLACK)
         level_display = font.render(f"Level: {level}", True, BLACK)
         score_display = font.render(f"Score: {score}", True, BLACK)
-        exp_display = font.render(f"Exp: {exp}/{exp_needed}", True, BLACK)
+        #exp_display = font.render(f"Exp: {exp}/{exp_needed}", True, BLACK)
 
-        screen.blit(timer_display, (10, 10))
+        #screen.blit(timer_display, (10, 10))
         screen.blit(level_display, (10,40))
         screen.blit(score_display, (10, 70))
-        screen.blit(exp_display, (10, 100))
+        #screen.blit(exp_display, (10, 100))
         # knight.update()
         # don't forget the update, otherwise nothing will show up!
         pygame.display.update()
