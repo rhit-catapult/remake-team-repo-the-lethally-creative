@@ -1,8 +1,7 @@
-from pickle import REDUCE
+
 
 import pygame
 import sys
-import my_character
 import random
 import time
 
@@ -82,7 +81,7 @@ class ExpOrb:
     def draw(self):
         pygame.draw.circle(self.screen, "Yellow", (int(self.x), int(self.y)), self.radius)
 
-def game_over_screen(screen, score, level):
+def game_over_screen(screen, score, level, song_length):
     font = pygame.font.Font(None, 48)
     small_font = pygame.font.Font(None, 36)
 
@@ -98,6 +97,8 @@ def game_over_screen(screen, score, level):
         screen.blit(level_msg, (WIDTH // 2 - level_msg.get_width() // 2, 320))
         screen.blit(rentry_msg, (WIDTH // 2 - rentry_msg.get_width() // 2, 380))
         pygame.display.flip()
+
+
 
 def main():
     pygame.init()
@@ -129,6 +130,7 @@ def main():
     exp_points = 0
     exp_needed = 10
     score = 0
+    exp = 0
 
     try:
         font = pygame.font.Font(None, 36)
@@ -145,7 +147,23 @@ def main():
         clock.tick(60)
         elapsed_time = time.time() - start_time
         if elapsed_time >= song_length:
-            return game_over_screen(screen, score, level)
+            return game_over_screen(screen, score, level, song_length)
+
+
+        #for event in pygame.event.get():
+            #if event.type == pygame.QUIT:
+                #pygame.quit()
+                #sys.exit()
+            #if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
+                    #elapsed_time = song_length + 1
+            #if event.type == pygame.KEYDOWN:
+                #if event.key == pygame.K_q:
+                    #pygame.quit()
+                #sys.exit()
+            #elif event.key == pygame.K_r:
+                #return True
+
+
 
 
         for event in pygame.event.get():
@@ -186,15 +204,15 @@ def main():
         for platform in platforms:
              platform.draw(screen)
 
-        for enemy in enemies[:]:
-            enemy.update()
-        if knight.rect().colliderect(enemy.rect) and enemy.alive:
-            exp_orbs.append(enemy.hit())
-            score += 20
-            if not enemy.alive:
-                enemies.remove(enemy)
-            else:
-                enemy.draw()
+       # for enemy in enemies[:]:
+            #enemy.update()
+        #if knight.rect().colliderect(enemy.rect) and enemy.alive:
+            #exp_orbs.append(enemy.hit())
+            #score += 20
+            #if not enemy.alive:
+                #enemies.remove(enemy)
+            #else:
+                #enemy.draw()
 
         for orb in exp_orbs:
             if knight.rect().colliderect(orb.rect):
