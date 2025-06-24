@@ -13,9 +13,33 @@ class Knight:
         self.y = y
         self.image_still = pygame.image.load("Idle.png")
         self.velocity_y = 0
+        self.health = 100
+
+        self.max_health = 100
+
+        self.is_attacking = False
+
+        self.attack_cooldown = 0
+
+        self.last_attack_time = 0
+
+        self.attack_duration = 200
 
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
+
+        health_bar_width = 85
+
+        health_bar_height = 15
+
+        health_bar_x = self.x + 6
+
+        health_bar_y = self.y - 15
+
+        current_health_width = (self.health / self.max_health * health_bar_width)
+
+        pygame.draw.rect(self.screen, (0, 0, 255),(health_bar_x, health_bar_y, health_bar_width, health_bar_height))
+        pygame.draw.rect(self.screen, (0, 255, 0),(health_bar_x,health_bar_y,current_health_width, health_bar_height))
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.image_still.get_width(), self.image_still.get_height())
@@ -30,7 +54,7 @@ class Platform:
             pygame.draw.rect(screen, self.color, self.rect)
 
 class Enemy:
-    def _init_(self, screen, x, y):
+    def __init__(self, screen, x, y):
         self.screen = screen
         self.x = x
         self.y = y
@@ -64,7 +88,7 @@ BLUE = (0,0,255)
 YELLOW = (255,255,0)
 
 class ExpOrb:
-    def _init_(self, screen, x, y):
+    def __init__(self, screen, x, y):
              self.screen = screen
              self.x = x
              self.y = y
@@ -85,12 +109,11 @@ def main():
     pygame.display.set_caption("lethally Project")
     screen = pygame.display.set_mode((1280, 720))
 
-    knight = Knight(screen, 100, 422)
+    knight = Knight(screen, 100, 400)
 
     platform1 = Platform(0, 550, 1500, 350, )
     platform2 = Platform(0, 550, 1500, 350, )
     platforms = [platform1, platform2]
-
 
     enemies = []
     exp_orbs =[]
@@ -145,7 +168,7 @@ def main():
 
 
         if pressed_keys[pygame.K_SPACE] and knight.velocity_y == 0:
-            knight.velocity_y = -15
+            knight.velocity_y = -10
 
         knight.velocity_y += 1
         knight.y += knight.velocity_y
@@ -161,6 +184,7 @@ def main():
         knight.draw()
         for platform in platforms:
             platform.draw(screen)
+
 
 
             # TODO: Add you events code
