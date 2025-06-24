@@ -123,9 +123,11 @@ def main():
             knight.x = knight.x - 5
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
-        if pressed_keys[pygame.K_SPACE]:
+        if pressed_keys[pygame.K_SPACE] and knight.velocity_y == 0:
             knight.velocity_y = -15
 
+        knight.velocity_y += 1
+        knight.y += knight.velocity_y
         # TODO: use physics to move knight.y
         # TODO: apply gravity to change velocity
         # TODO: collision detection for landing on ground
@@ -134,22 +136,16 @@ def main():
                 knight.y = platform.rect.top - knight.rect().height
                 knight.velocity_y = 0
 
-        knight.velocity_y +=1
-        knight.velocity_y += knight.velocity_y
-
         knight.draw()
-        pygame.draw.rect(screen, color1 , ground_rect)
-            # TODO: Add you events code
         for platform in platforms:
-            if knight.rect().colliderect(platform.rect) and knight.velocity_y > 0:
-                knight.y = platform.rect.top - knight.rect().height
-                knight.velocity_y = 0
+            platform.draw(screen)
 
-        # TODO: Fill the screen with whatever background color you like!
- # screen.fill((255, 255, 255))
 
-        # draws the character every frame
-        #character.draw()
+            # TODO: Add you events code
+
+
+
+
 
         # TODO: Add your project code
         for platform in platforms:
