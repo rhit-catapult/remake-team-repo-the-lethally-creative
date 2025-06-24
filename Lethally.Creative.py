@@ -111,7 +111,7 @@ def main():
 
     ground_height = 10
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
-    pygame.display.set_caption("lethally Project")
+    pygame.display.set_caption("Skeleton Slayer")
     screen = pygame.display.set_mode((1280, 720))
 
     knight = Knight(screen, 100, 422)
@@ -129,6 +129,7 @@ def main():
     exp_points = 0
     exp_needed = 10
     score = 0
+    exp = 0
 
     try:
         font = pygame.font.Font(None, 36)
@@ -188,13 +189,11 @@ def main():
 
         for enemy in enemies[:]:
             enemy.update()
-        if knight.rect().colliderect(enemy.rect) and enemy.alive:
-            exp_orbs.append(enemy.hit())
-            score += 20
-            if not enemy.alive:
-                enemies.remove(enemy)
-            else:
-                enemy.draw()
+        #if knight.rect().colliderect(enemy.rect) and enemy.alive:
+            #if not enemy.alive:
+            #enemies.remove(enemy)
+            #else:
+                #enemy.draw()
 
         for orb in exp_orbs:
             if knight.rect().colliderect(orb.rect):
