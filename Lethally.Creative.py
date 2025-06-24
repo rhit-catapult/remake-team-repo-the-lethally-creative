@@ -108,6 +108,10 @@ def main():
     enemy_spawn_timer = 0
     enemy_spawn_delay = 120
 
+    gravity = 1
+
+    ground_y = 400
+
 
 
     clock = pygame.time.Clock()
@@ -124,9 +128,20 @@ def main():
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
         if pressed_keys[pygame.K_SPACE]:
-            knight.velocity_y = -15
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE] and knight == ground_y:
+                knight.velocity_y = -15
 
-        # TODO: use physics to move knight.y
+        # TODO: use physics to move knight
+        knight.y += knight.velocity_y
+
+
+        if knight.y > ground_y:
+            knight.y = ground_y
+
+            knight.velocity_y = 0
+
+
         # TODO: apply gravity to change velocity
         # TODO: collision detection for landing on ground
         for platform in platforms:
