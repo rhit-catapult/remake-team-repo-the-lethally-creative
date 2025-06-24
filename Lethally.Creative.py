@@ -182,10 +182,10 @@ def main():
             return game_over_screen(screen, score, level, song_length)
 
 
-        #for event in pygame.event.get():
-            #if event.type == pygame.QUIT:
-                #pygame.quit()
-                #sys.exit()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
             #if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
                     #elapsed_time = song_length + 1
             #if event.type == pygame.KEYDOWN:
@@ -290,15 +290,15 @@ def main():
             orb.draw()
 
         remaining_time = max(0, int(song_length - elapsed_time))
-        #timer_display = font.render(f"Time: {remaining_time}", True, BLACK)
+        timer_display = font.render(f"Time: {remaining_time}", True, BLACK)
         level_display = font.render(f"Level: {level}", True, BLACK)
         score_display = font.render(f"Score: {score}", True, BLACK)
-        #exp_display = font.render(f"Exp: {exp}/{exp_needed}", True, BLACK)
+        exp_display = font.render(f"Exp: {exp}/{exp_needed}", True, BLACK)
 
-        #screen.blit(timer_display, (10, 10))
+        screen.blit(timer_display, (10, 10))
         screen.blit(level_display, (10,40))
         screen.blit(score_display, (10, 70))
-        #screen.blit(exp_display, (10, 100))
+        screen.blit(exp_display, (10, 100))
         # knight.update()
         # don't forget the update, otherwise nothing will show up!
         pygame.display.update()
