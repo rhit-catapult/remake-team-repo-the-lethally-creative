@@ -14,6 +14,7 @@ class Knight:
         self.image_still = pygame.image.load("Idle.png")
         self.velocity_y = 0
 
+
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
 
@@ -30,7 +31,7 @@ class Platform:
             pygame.draw.rect(screen, self.color, self.rect)
 
 class Enemy:
-    def _init_(self, screen, x, y):
+    def __init__(self, screen, x, y):
         self.screen = screen
         self.x = x
         self.y = y
@@ -39,12 +40,19 @@ class Enemy:
         self.speed = random.randint(1, 3)
         self.rect = pygame.Rect(x, y, x, y)
 
-    def rect(knight):
-        return pygame.Rect(knight.x, knight.y,knight.image_still.get_width(),knight.image_still.get_height())
-
     def update(self):
-        self.x -= self.speed
-        self.rect.x = self.x
+        self.rect.x -= 2
+
+    def hit(self):
+        self.alive = False
+        return ExpOrb(self.screen, self.rect.centerx, self.rect.centery)
+
+def rect(knight):
+    return pygame.Rect(knight.x, knight.y,knight.image_still.get_width(),knight.image_still.get_height())
+
+def update(self):
+    self.x -= self.speed
+    self.rect.x = self.x
 
     def draw(self):
         pass
@@ -62,6 +70,7 @@ RED = (255,0,0)
 GREEN = (0,255,0)
 BLUE = (0,0,255)
 YELLOW = (255,255,0)
+GRAY = (128, 128, 128)
 
 class ExpOrb:
     def _init_(self, screen, x, y):
@@ -73,13 +82,33 @@ class ExpOrb:
     def draw(self):
         pygame.draw.circle(self.screen, "Yellow", (int(self.x), int(self.y)), self.radius)
 
+def game_over_screen(screen, score, level):
+    font = pygame.font.Font(None, 48)
+    small_font = pygame.font.Font(None, 36)
+
+    while True:
+        screen.fill(BLACK)
+        msg = font.render("GAME OVER", True, RED)
+        score_msg = small_font.render(f"Score: {score}", True, WHITE)
+        level_msg = small_font.render(f'Level Reached: {level}', True, WHITE)
+        rentry_msg = small_font.render('Press R to Retry or Q to Quit', True, GRAY)
+
+        screen.blit(msg, (WIDTH // 2 - msg.get_width() // 2, 200))
+        screen.blit(score_msg, (WIDTH // 2 - score_msg.get_width() // 2, 280))
+        screen.blit(level_msg, (WIDTH // 2 - level_msg.get_width() // 2, 320))
+        screen.blit(rentry_msg, (WIDTH // 2 - rentry_msg.get_width() // 2, 380))
+        pygame.display.flip()
 
 def main():
     pygame.init()
     image1 = pygame.image.load("output-onlinepngtools.jpg")
     color1 = pygame.Color('black')
     pygame.mixer.music.load("The Trooper (1998 Remaster).mp3")
-    pygame.mixer.music.play(-1)
+    pygame.mixer.music.play()
+    song_length = pygame.mixer.Sound("The Trooper (1998 Remaster).mp3").get_length()
+    start_time = time.time()
+
+
     ground_height = 10
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
     pygame.display.set_caption("lethally Project")
@@ -92,7 +121,8 @@ def main():
     platforms = [platform1, platform2]
 
 
-    enemies = []
+    enemies = [Enemy(screen, random.randint(600, 1200), 510) for _ in range(3)]
+
     exp_orbs =[]
 
     level = 1
@@ -113,6 +143,11 @@ def main():
     clock = pygame.time.Clock()
     while True:
         clock.tick(60)
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= song_length:
+            return game_over_screen(screen, score, level)
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
