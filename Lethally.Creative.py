@@ -239,13 +239,13 @@ def main():
 
         for enemy in enemies[:]:
             enemy.update()
-        if knight.rect().colliderect(enemy.rect) and enemy.alive:
+        #if knight.rect().colliderect(enemy.rect) and enemy.alive:
             exp_orbs.append(enemy.hit())
             score += 20
             if not enemy.alive:
                 enemies.remove(enemy)
-            else:
-                enemy.draw()
+            #else:
+               # enemy.draw()
 
         for orb in exp_orbs:
             if knight.rect().colliderect(orb.rect):
@@ -260,15 +260,15 @@ def main():
             orb.draw()
 
         remaining_time = max(0, int(song_length - elapsed_time))
-        timer_display = font.render(f"Time: {remaining_time}", True, BLACK)
+        #timer_display = font.render(f"Time: {remaining_time}", True, BLACK)
         level_display = font.render(f"Level: {level}", True, BLACK)
         score_display = font.render(f"Score: {score}", True, BLACK)
-        exp_display = font.render(f"Exp: {exp}/{exp_needed}", True, BLACK)
+        #exp_display = font.render(f"Exp: {exp}/{exp_needed}", True, BLACK)
 
-        screen.blit(timer_display, (10, 10))
+        #screen.blit(timer_display, (10, 10))
         screen.blit(level_display, (10,40))
         screen.blit(score_display, (10, 70))
-        screen.blit(exp_display, (10, 100))
+        #screen.blit(exp_display, (10, 100))
         # knight.update()
         # don't forget the update, otherwise nothing will show up!
         pygame.display.update()
