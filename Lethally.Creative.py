@@ -55,7 +55,7 @@ class Knight(pygame.sprite.Sprite):
 
 
     def draw(self):
-        self.screen.blit(self.attack_animation_images[self.attack_frame_index], (self.x, self.y))
+        self.screen.blit(self.image, (self.x, self.y))
 
         health_bar_width = 50
 
@@ -252,6 +252,11 @@ def main():
                 if event.key == pygame.K_e:
                     game_over_screen(screen, score, level, song_length)
                     return
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_a:
+                    knight.is_attacking = False
+
+
 
         enemy_spawn_timer = 0
         enemy_spawn_timer += 1
@@ -276,6 +281,13 @@ def main():
         if pressed_keys == pygame.K_a:
             if event == pygame.K_a:
                 knight.attack()
+
+
+
+
+        knight_width = knight.image_still.get_width()
+        knight_height = knight.image_still.get_height()
+        knight.x = max(0, min(knight.x, WIDTH - knight_width))
 
 
 
