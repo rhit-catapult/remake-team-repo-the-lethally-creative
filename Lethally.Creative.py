@@ -274,6 +274,8 @@ def main():
             knight.x = knight.x - 5
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
+        knight_width = knight.image_still.get_width()
+        knight.x = max(0, min(knight.x, WIDTH - knight_width))
         if event == pygame.K_a:
 
             knight.attack()
