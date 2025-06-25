@@ -150,6 +150,22 @@ def game_over_screen(screen, score, level, song_length):
     small_font = pygame.font.Font(None, 36)
 
     while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
+                elif event.key == pygame.K_r:
+                    main()
+                    return
+
+
+
+
+
+
         screen.fill(BLACK)
         msg = font.render("GAME OVER", True, RED)
         score_msg = small_font.render(f"Score: {score}", True, WHITE)
@@ -226,21 +242,13 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            #if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-                    #elapsed_time = song_length + 1
-            #if event.type == pygame.KEYDOWN:
-                #if event.key == pygame.K_q:
-                    #pygame.quit()
-                #sys.exit()
-            #elif event.key == pygame.K_r:
-                #return True
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_e:
+                    game_over_screen(screen, score, level, song_length)
+                    return
 
 
 
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
         screen.blit(image1, (0, 0))
 
         pressed_keys = pygame.key.get_pressed()
@@ -249,10 +257,7 @@ def main():
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
 
-        if pressed_keys[pygame.K_SPACE]:
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_SPACE] and knight == ground_y:
-                knight.velocity_y = -15
+
 
             if pressed_keys[pygame.K_a]:
              knight.attack1()
@@ -280,21 +285,34 @@ def main():
             return False
 
         # TODO: use physics to move knight
-        knight.y += knight.velocity_y
-
-
-        if knight.y > ground_y:
-            knight.y = ground_y
-
-            knight.velocity_y = 0
-
-
-
-        if pressed_keys[pygame.K_SPACE] and knight.velocity_y == 0:
-            knight.velocity_y = -10
-
         knight.velocity_y += 1
         knight.y += knight.velocity_y
+
+
+        grounded = False
+        for platform in platforms:
+            if knight.rect().colliderect(platform.rect):
+                knight.y = platform.rect.top - knight.rect().height
+                knight.velocity_y = 0
+                grounded = True
+                break
+
+        if pressed_keys[pygame.K_SPACE] and grounded:
+            knight.velocity_y = -10
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         # TODO: use physics to move knight.y
