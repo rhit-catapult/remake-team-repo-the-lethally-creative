@@ -15,6 +15,7 @@ class Knight(pygame.sprite.Sprite):
         self.screen = screen
         self.x = x
         self.y = y
+        self.image_still = self.image
 
         self.velocity_y = 0
         self.health = 100
@@ -297,11 +298,16 @@ def main():
         knight.velocity_y += 1
         knight.y += knight.velocity_y
 
+        knight.rect.topleft = (knight.x, knight.y)
 
         grounded = False
         for platform in platforms:
+            print(knight.rect)
+            print(platform.rect)
             if knight.rect.colliderect(platform.rect):
+                print('hit the ground')
                 knight.y = platform.rect.top - knight.rect.height
+
                 knight.velocity_y = 0
                 grounded = True
                 break
