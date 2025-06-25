@@ -258,7 +258,7 @@ def main():
 
 
 
-        enemy_spawn_timer += 3
+        enemy_spawn_timer += 1
 
         if enemy_spawn_timer >= enemy_spawn_delay:
             new_enemy = Enemy(screen, random.randint(0, WIDTH - 40), 510)
