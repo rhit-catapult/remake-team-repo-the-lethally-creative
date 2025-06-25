@@ -15,21 +15,7 @@ class Knight(pygame.sprite.Sprite):
         self.screen = screen
         self.x = x
         self.y = y
-        self.sprites = []
-        self.sprites.append(pygame.image.load("Idle.png"))
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
-        self.sprites.append(pygame.image.load())
+
         self.velocity_y = 0
         self.health = 100
 
@@ -74,7 +60,7 @@ class Knight(pygame.sprite.Sprite):
 
 
     def draw(self):
-        self.screen.blit(self.image_still, (self.x, self.y))
+        self.screen.blit(self.attack_animation_images[self.attack_frame_index], (self.x, self.y))
 
         health_bar_width = 50
 
@@ -116,17 +102,22 @@ class Enemy:
         self.screen = screen
         self.x = x
         self.y = y
-        self.width = 40
-        self.height = 40
+        self.size = 40
         self.speed = random.randint(1, 3)
+        self.alive = True
         self.rect = pygame.Rect(x, y, x, y)
 
     def update(self):
-        self.rect.x -= 2
+        self.x -= self.speed
+        self.rect.x = self.x
+
+    def draw(self):
+        if self.alive:
+            pygame.draw.rect(self.screen, RED, (self.x, self.y, self.size, self.size ))
 
     def hit(self):
         self.alive = False
-        return ExpOrb(self.screen, self.rect.centerx, self.rect.centery)
+        return ExpOrb(self.screen, self.x + self.size // 2, self.y + self.size //2)
 
 def rect(knight):
     return pygame.Rect(knight.x, knight.y,knight.image_still.get_width(),knight.image_still.get_height())
@@ -207,7 +198,6 @@ def main(screen=None):
     song_length = pygame.mixer.Sound("The Trooper (1998 Remaster).mp3").get_length()
     #This file came from a YouTube video: https://youtu.be/4VZbjrDwQ28
     start_time = time.time()
-    sprite = Knight(screen, 100, 100)
 
 
     ground_height = 10
@@ -310,37 +300,21 @@ def main(screen=None):
 
         grounded = False
         for platform in platforms:
-            if knight.rect().colliderect(platform.rect):
-                knight.y = platform.rect.top - knight.rect().height
+            if knight.rect.colliderect(platform.rect):
+                knight.y = platform.rect.top - knight.rect.height
                 knight.velocity_y = 0
                 grounded = True
                 break
 
         if pressed_keys[pygame.K_SPACE] and grounded:
             knight.velocity_y = -10
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # TODO: use physics to move knight.y
+# TODO: use physics to move knight.y
 
         # TODO: apply gravity to change velocity
         # TODO: collision detection for landing on ground
         for platform in platforms:
-            if knight.rect().colliderect(platform.rect) and knight.velocity_y >= 0:
-                knight.y = platform.rect.top - knight.rect().height
+            if knight.rect.colliderect(platform.rect) and knight.velocity_y >= 0:
+                knight.y = platform.rect.top - knight.rect.height
                 knight.velocity_y = 0
 
         knight.draw()
@@ -387,32 +361,23 @@ def main(screen=None):
 
         for enemy in enemies[:]:
             enemy.update()
-        #if knight.rect().colliderect(enemy.rect) and enemy.alive:
+            enemy.draw()
+        if knight.rect.colliderect(enemy.rect) and enemy.alive:
             exp_orbs.append(enemy.hit())
             score += 20
             if not enemy.alive:
                 enemies.remove(enemy)
-            #else:
-               # enemy.draw()
+            else:
+                enemy.draw()
 
-       # for enemy in enemies[:]:
-            #enemy.update()
-        #if knight.rect().colliderect(enemy.rect) and enemy.alive:
-            #exp_orbs.append(enemy.hit())
-            #score += 20
-            #if not enemy.alive:
-                #enemies.remove(enemy)
-            #else:
-                #enemy.draw()
-
-        #if knight.rect().colliderect(enemy.rect) and enemy.alive:
-            #if not enemy.alive:
-            #enemies.remove(enemy)
-            #else:
-                #enemy.draw()
+        if knight.rect.colliderect(enemy.rect) and enemy.alive:
+            if not enemy.alive:
+                enemies.remove(enemy)
+            else:
+                enemy.draw()
 
         for orb in exp_orbs:
-            if knight.rect().colliderect(orb.rect):
+            if knight.rect.colliderect(orb.rect):
                 exp_orbs.remove(orb)
                 exp += 1
                 score += 10
