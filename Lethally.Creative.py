@@ -189,7 +189,7 @@ def game_over_screen(screen, score, level, song_length):
 
 
 
-def main(screen=None):
+def main():
     pygame.init()
     image1 = pygame.image.load("output-onlinepngtools.jpg")
     color1 = pygame.Color('black')
