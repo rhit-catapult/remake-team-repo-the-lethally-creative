@@ -217,27 +217,37 @@ def main():
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
 
-        if pressed_keys[pygame.K_SPACE]:
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_SPACE] and knight == ground_y:
-                knight.velocity_y = -15
+
 
         # TODO: use physics to move knight
-        knight.y += knight.velocity_y
-
-
-        if knight.y > ground_y:
-            knight.y = ground_y
-
-            knight.velocity_y = 0
-
-
-
-        if pressed_keys[pygame.K_SPACE] and knight.velocity_y == 0:
-            knight.velocity_y = -10
-
         knight.velocity_y += 1
         knight.y += knight.velocity_y
+
+        grounded = False
+        for platform in platforms:
+            if knight.rect().colliderect(platform.rect):
+                knight.y = platform.rect.top - knight.rect().height
+                knight.velocity_y = 0
+                grounded = True
+                break
+
+        if pressed_keys[pygame.K_SPACE] and grounded:
+            knight.velocity_y = -10
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
         # TODO: use physics to move knight.y
 
         # TODO: apply gravity to change velocity
