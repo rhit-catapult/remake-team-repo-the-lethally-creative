@@ -104,13 +104,15 @@ class Enemy:
         self.x = x
         self.y = y
         self.size = 40
-        self.speed = random.randint(1, 3)
+        self.speed = random.randint(2, 5) * random.choice([-1, 1])
         self.alive = True
-        self.rect = pygame.Rect(x, y, x, y)
+        self.rect = pygame.Rect(x, y, self.size, self.size)
 
     def update(self):
         self.x -= self.speed
         self.rect.x = self.x
+        if self.rect.left <= 0 or self.rect.right >= WIDTH:
+            self.speed *= -1
 
     def draw(self):
         if self.alive:
@@ -257,7 +259,13 @@ def main():
                     game_over_screen(screen, score, level, song_length)
                     return
 
-
+        enemy_spawn_timer = 0
+        enemy_spawn_timer += 1
+        if enemy_spawn_timer >= enemy_spawn_delay:
+            new_enemy = Enemy(screen, random.randint(50, WIDTH - 50), 510)
+            enemies.append(new_enemy)
+            enemy_spawn_timer = 0
+            enemy_spawn_delay = random.randint ( 60, 180)
 
         screen.blit(image1, (0, 0))
 
