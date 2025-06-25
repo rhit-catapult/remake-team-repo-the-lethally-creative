@@ -259,15 +259,20 @@ def main():
                     game_over_screen(screen, score, level, song_length)
                     return
 
-        enemy_spawn_timer = 0
-        enemy_spawn_timer += 1
+        enemy_spawn_timer += 3
+
         if enemy_spawn_timer >= enemy_spawn_delay:
-            new_enemy = Enemy(screen, random.randint(50, WIDTH - 50), 510)
+            new_enemy = Enemy(screen, random.randint(0, WIDTH - 40), 510)
+
             enemies.append(new_enemy)
+
             enemy_spawn_timer = 0
-            enemy_spawn_delay = random.randint ( 60, 180)
+
+            enemy_spawn_delay = random.randint(60, 180)
 
         screen.blit(image1, (0, 0))
+
+
 
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_LEFT]:
