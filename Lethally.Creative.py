@@ -30,13 +30,7 @@ class Knight(pygame.sprite.Sprite):
 
         self.attack_duration = 200
 
-        self.attack_animation_images = [
-
-            pygame.image.load("Attack 1.png"),
-
-            pygame.image.load("Attack 2.png"),
-
-            pygame.image.load("Attack 3.png"),]
+        self.attack_animation_images = [pygame.image.load("Attack 3.png")]
 
         self.attack_frame_index = 0
 
@@ -205,7 +199,7 @@ def main():
 
     ground_height = 10
     ground_rect = pygame.Rect(0, 550, ground_height, ground_height)
-    pygame.display.set_caption("Skeleton Slayer")
+    pygame.display.set_caption("Slime Slayer")
     screen = pygame.display.set_mode((1280, 720))
 
     knight = Knight(screen, 100, 400)
@@ -274,8 +268,7 @@ def main():
             knight.x = knight.x - 5
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
-        if event == pygame.K_a:
-
+        if pressed_keys == pygame.K_a:
             knight.attack()
 
 
