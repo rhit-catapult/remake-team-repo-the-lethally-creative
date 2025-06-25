@@ -60,7 +60,7 @@ class Knight(pygame.sprite.Sprite):
 
 
     def draw(self):
-        self.screen.blit(self.image_still, (self.x, self.y))
+        self.screen.blit(self.attack_animation_images[self.attack_frame_index], (self.x, self.y))
 
         health_bar_width = 50
 
@@ -300,37 +300,21 @@ def main():
 
         grounded = False
         for platform in platforms:
-            if knight.rect().colliderect(platform.rect):
-                knight.y = platform.rect.top - knight.rect().height
+            if knight.rect.colliderect(platform.rect):
+                knight.y = platform.rect.top - knight.rect.height
                 knight.velocity_y = 0
                 grounded = True
                 break
 
         if pressed_keys[pygame.K_SPACE] and grounded:
             knight.velocity_y = -10
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # TODO: use physics to move knight.y
+# TODO: use physics to move knight.y
 
         # TODO: apply gravity to change velocity
         # TODO: collision detection for landing on ground
         for platform in platforms:
-            if knight.rect().colliderect(platform.rect) and knight.velocity_y >= 0:
-                knight.y = platform.rect.top - knight.rect().height
+            if knight.rect.colliderect(platform.rect) and knight.velocity_y >= 0:
+                knight.y = platform.rect.top - knight.rect.height
                 knight.velocity_y = 0
 
         knight.draw()
@@ -378,7 +362,7 @@ def main():
         for enemy in enemies[:]:
             enemy.update()
             enemy.draw()
-        if knight.rect().colliderect(enemy.rect) and enemy.alive:
+        if knight.rect.colliderect(enemy.rect) and enemy.alive:
             exp_orbs.append(enemy.hit())
             score += 20
             if not enemy.alive:
@@ -386,16 +370,14 @@ def main():
             else:
                 enemy.draw()
 
-
-
-        if knight.rect().colliderect(enemy.rect) and enemy.alive:
+        if knight.rect.colliderect(enemy.rect) and enemy.alive:
             if not enemy.alive:
-            enemies.remove(enemy)
+                enemies.remove(enemy)
             else:
                 enemy.draw()
 
         for orb in exp_orbs:
-            if knight.rect().colliderect(orb.rect):
+            if knight.rect.colliderect(orb.rect):
                 exp_orbs.remove(orb)
                 exp += 1
                 score += 10
