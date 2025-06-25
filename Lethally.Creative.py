@@ -11,6 +11,9 @@ class Knight:
         self.x = x
         self.y = y
         self.image_still = pygame.image.load("Idle.png")
+        self.image_attack1 = pygame.image.load("Attack 1.png")
+        self.image_attack2 = pygame.image.load("Attack 2.png")
+        self.image_attack3 = pygame.image.load("Attack 3.png")
         self.velocity_y = 0
         self.health = 100
 
@@ -24,17 +27,44 @@ class Knight:
 
         self.attack_duration = 200
 
+        self.attack_animation_images = [
+
+            pygame.image.load("Attack 1.png"),
+
+            pygame.image.load("Attack 2.png"),
+
+            pygame.image.load("Attack 3.png"),]
+
+        self.attack_frame_index = 0
+
+        self.last_frame_update = pygame.time.get_ticks()
+
+        self.animation_speed = 100
+
+    def get_attack_hitbox(self):
+            if self.is_attacking:
+
+
+                attack_width = 70
+
+                attack_height = 50
+
+                return pygame.Rect(self.x + self.image_still.get_width() / 2,
+                                   self.y + self.image_still.get_height() / 4, attack_width, attack_height)
+
+            return None
+
 
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
 
-        health_bar_width = 85
+        health_bar_width = 50
 
         health_bar_height = 15
 
-        health_bar_x = self.x + 6
+        health_bar_x = self.x + 15
 
-        health_bar_y = self.y - 15
+        health_bar_y = self.y - 0
 
         current_health_width = (self.health / self.max_health * health_bar_width)
 
@@ -43,6 +73,16 @@ class Knight:
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.image_still.get_width(), self.image_still.get_height())
+
+    def knight(self):
+        if self.is_attacking:
+
+            now = pygame.time.get_ticks()
+
+            if now - self.last_frame_update > self.animation_speed:
+                self.last_frame_update = now
+
+                self.attack_frame_index = (self.attack_frame_index + 1) % len(self.attack_animation_images)
 
 
 class Platform:
@@ -214,6 +254,31 @@ def main():
             if keys[pygame.K_SPACE] and knight == ground_y:
                 knight.velocity_y = -15
 
+            if pressed_keys[pygame.K_a]:
+             knight.attack1()
+
+
+
+
+
+
+        def attack(self):
+
+            current_time = pygame.time.get_ticks()
+
+            if current_time - self.last_attack_time >= self.attack_cooldown:
+                self.is_attacking = True
+
+                self.attack_frame_index = 0
+
+                self.last_frame_update = current_time
+
+                self.last_attack_time = current_time
+
+                return True
+
+            return False
+
         # TODO: use physics to move knight
         knight.y += knight.velocity_y
 
@@ -230,6 +295,8 @@ def main():
 
         knight.velocity_y += 1
         knight.y += knight.velocity_y
+
+
         # TODO: use physics to move knight.y
 
         # TODO: apply gravity to change velocity
@@ -243,9 +310,34 @@ def main():
         for platform in platforms:
             platform.draw(screen)
 
+            if knight.is_attacking:
+
+                attack_hitbox = knight.get_attack_hitbox()
+
+                if attack_hitbox:
+
+                    for enemy in enemies[:]:
+
+                        if attack_hitbox.colliderect(enemy.rect):
+
+
+
+                            if hasattr(enemy, 'alive') and enemy.alive:
+
+                                exp_orbs.append(enemy.hit())
+
+                                score += 20
+
+
+
+                                if not enemy.alive:
+                                    enemies.remove(enemy)
+
 
 
             # TODO: Add you events code
+
+
 
 
 
