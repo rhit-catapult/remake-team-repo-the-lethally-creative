@@ -11,9 +11,6 @@ class Knight:
         self.x = x
         self.y = y
         self.image_still = pygame.image.load("Idle.png")
-        self.image_attack1 = pygame.image.load("Attack 1.png")
-        self.image_attack2 = pygame.image.load("Attack 2.png")
-        self.image_attack3 = pygame.image.load("Attack 3.png")
         self.velocity_y = 0
         self.health = 100
 
@@ -40,6 +37,8 @@ class Knight:
         self.last_frame_update = pygame.time.get_ticks()
 
         self.animation_speed = 100
+
+
 
     def get_attack_hitbox(self):
             if self.is_attacking:
@@ -82,7 +81,7 @@ class Knight:
             if now - self.last_frame_update > self.animation_speed:
                 self.last_frame_update = now
 
-                self.attack_frame_index = (self.attack_frame_index + 1) % len(self.attack_animation_images)
+
 
 
 class Platform:
@@ -198,14 +197,13 @@ def main():
     knight = Knight(screen, 100, 400)
 
     platform1 = Platform(0, 550, 1500, 350, )
-    platform2 = Platform(0, 550, 1500, 350, )
-    platforms = [platform1, platform2]
-
+    platforms = [platform1]
 
     enemies = []
 
-
     enemies = [Enemy(screen, random.randint(600, 1200), 510) for _ in range(3)]
+
+
 
 
     exp_orbs =[]
@@ -256,11 +254,11 @@ def main():
             knight.x = knight.x - 5
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
+        if event == pygame.K_a:
+
+            knight.attack()
 
 
-
-            if pressed_keys[pygame.K_a]:
-             knight.attack1()
 
 
 
