@@ -110,6 +110,22 @@ def game_over_screen(screen, score, level, song_length):
     small_font = pygame.font.Font(None, 36)
 
     while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
+                elif event.key == pygame.K_r:
+                    main()
+                    return
+
+
+
+
+
+
         screen.fill(BLACK)
         msg = font.render("GAME OVER", True, RED)
         score_msg = small_font.render(f"Score: {score}", True, WHITE)
@@ -186,21 +202,13 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            #if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-                    #elapsed_time = song_length + 1
-            #if event.type == pygame.KEYDOWN:
-                #if event.key == pygame.K_q:
-                    #pygame.quit()
-                #sys.exit()
-            #elif event.key == pygame.K_r:
-                #return True
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_e:
+                    game_over_screen(screen, score, level, song_length)
+                    return
 
 
 
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
         screen.blit(image1, (0, 0))
 
         pressed_keys = pygame.key.get_pressed()
