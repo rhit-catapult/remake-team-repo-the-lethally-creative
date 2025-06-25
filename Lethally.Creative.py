@@ -302,10 +302,10 @@ def main():
 
         grounded = False
         for platform in platforms:
-            print(knight.rect)
-            print(platform.rect)
+
+
             if knight.rect.colliderect(platform.rect):
-                print('hit the ground')
+
                 knight.y = platform.rect.top - knight.rect.height
 
                 knight.velocity_y = 0
@@ -313,7 +313,7 @@ def main():
                 break
 
         if pressed_keys[pygame.K_SPACE] and grounded:
-            knight.velocity_y = -10
+            knight.velocity_y = -15
 # TODO: use physics to move knight.y
 
         # TODO: apply gravity to change velocity
