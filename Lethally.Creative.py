@@ -6,12 +6,30 @@ import my_character
 import random
 import time
 
-class Knight:
+class Knight(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface, x, y):
+        super(Knight, self).__init__()
+        self.image = pygame.image.load("Idle.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
         self.screen = screen
         self.x = x
         self.y = y
-        self.image_still = pygame.image.load("Idle.png")
+        self.sprites = []
+        self.sprites.append(pygame.image.load("Idle.png"))
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
+        self.sprites.append(pygame.image.load())
         self.velocity_y = 0
         self.health = 100
 
@@ -132,7 +150,9 @@ def main():
     pygame.mixer.music.load("The Trooper (1998 Remaster).mp3")
     pygame.mixer.music.play()
     song_length = pygame.mixer.Sound("The Trooper (1998 Remaster).mp3").get_length()
+    #This file came from a YouTube video: https://youtu.be/4VZbjrDwQ28
     start_time = time.time()
+    sprite = Knight(screen, 100, 100)
 
 
     ground_height = 10
