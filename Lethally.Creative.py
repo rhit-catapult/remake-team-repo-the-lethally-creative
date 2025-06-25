@@ -1,3 +1,5 @@
+
+
 import pygame
 import sys
 import my_character
@@ -60,7 +62,7 @@ class Knight(pygame.sprite.Sprite):
 
         health_bar_height = 15
 
-        health_bar_x = self.x + 20
+        health_bar_x = self.x + 15
 
         health_bar_y = self.y - 0
 
@@ -262,25 +264,42 @@ def main():
 
 
 
-        enemy_spawn_timer = 0
         enemy_spawn_timer += 1
+
         if enemy_spawn_timer >= enemy_spawn_delay:
-            new_enemy = Enemy(screen, random.randint(50, WIDTH - 50), 510)
+            new_enemy = Enemy(screen, random.randint(0, WIDTH - 40), 510)
+
             enemies.append(new_enemy)
+
             enemy_spawn_timer = 0
-            enemy_spawn_delay = random.randint ( 60, 180)
+
+            enemy_spawn_delay = random.randint(60, 180)
 
         screen.blit(image1, (0, 0))
+
+
 
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_LEFT]:
             knight.x = knight.x - 5
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
+        clamp_margin = 20
+        knight.x = max(0,min (knight.x, WIDTH - clamp_margin))
+
+        knight.rect.topleft =(knight.x, knight.y)
+
+        if pressed_keys == pygame.K_a:
+            if event == pygame.K_a:
+                knight.attack()
 
 
         knight_width = knight.image.get_width()
         knight_height = knight.image.get_height()
+
+
+        knight_width = knight.image_still.get_width()
+        knight_height = knight.image_still.get_height()
         knight.x = max(0, min(knight.x, WIDTH - knight_width))
 
 
