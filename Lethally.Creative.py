@@ -28,18 +28,47 @@ class Knight(pygame.sprite.Sprite):
         self.last_attack_time = 0
 
         self.attack_duration = 200
-        self.image =
+
+        self.attack_animation_images = [
+
+            pygame.image.load("Attack 1.png"),
+
+            pygame.image.load("Attack 2.png"),
+
+            pygame.image.load("Attack 3.png"),]
+
+        self.attack_frame_index = 0
+
+        self.last_frame_update = pygame.time.get_ticks()
+
+        self.animation_speed = 100
+
+
+
+    def get_attack_hitbox(self):
+            if self.is_attacking:
+
+
+                attack_width = 70
+
+                attack_height = 50
+
+                return pygame.Rect(self.x + self.image_still.get_width() / 2,
+                                   self.y + self.image_still.get_height() / 4, attack_width, attack_height)
+
+            return None
+
 
     def draw(self):
         self.screen.blit(self.image_still, (self.x, self.y))
 
-        health_bar_width = 85
+        health_bar_width = 50
 
         health_bar_height = 15
 
-        health_bar_x = self.x + 6
+        health_bar_x = self.x + 15
 
-        health_bar_y = self.y - 15
+        health_bar_y = self.y - 0
 
         current_health_width = (self.health / self.max_health * health_bar_width)
 
@@ -48,6 +77,16 @@ class Knight(pygame.sprite.Sprite):
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.image_still.get_width(), self.image_still.get_height())
+
+    def knight(self):
+        if self.is_attacking:
+
+            now = pygame.time.get_ticks()
+
+            if now - self.last_frame_update > self.animation_speed:
+                self.last_frame_update = now
+
+
 
 
 class Platform:
@@ -169,14 +208,13 @@ def main():
     knight = Knight(screen, 100, 400)
 
     platform1 = Platform(0, 550, 1500, 350, )
-    platform2 = Platform(0, 550, 1500, 350, )
-    platforms = [platform1, platform2]
-
+    platforms = [platform1]
 
     enemies = []
 
-
     enemies = [Enemy(screen, random.randint(600, 1200), 510) for _ in range(3)]
+
+
 
 
     exp_orbs =[]
@@ -227,12 +265,38 @@ def main():
             knight.x = knight.x - 5
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
+        if event == pygame.K_a:
+
+            knight.attack()
 
 
+
+
+
+
+
+
+        def attack(self):
+
+            current_time = pygame.time.get_ticks()
+
+            if current_time - self.last_attack_time >= self.attack_cooldown:
+                self.is_attacking = True
+
+                self.attack_frame_index = 0
+
+                self.last_frame_update = current_time
+
+                self.last_attack_time = current_time
+
+                return True
+
+            return False
 
         # TODO: use physics to move knight
         knight.velocity_y += 1
         knight.y += knight.velocity_y
+
 
         grounded = False
         for platform in platforms:
@@ -259,6 +323,7 @@ def main():
 
 
 
+
         # TODO: use physics to move knight.y
 
         # TODO: apply gravity to change velocity
@@ -272,9 +337,34 @@ def main():
         for platform in platforms:
             platform.draw(screen)
 
+            if knight.is_attacking:
+
+                attack_hitbox = knight.get_attack_hitbox()
+
+                if attack_hitbox:
+
+                    for enemy in enemies[:]:
+
+                        if attack_hitbox.colliderect(enemy.rect):
+
+
+
+                            if hasattr(enemy, 'alive') and enemy.alive:
+
+                                exp_orbs.append(enemy.hit())
+
+                                score += 20
+
+
+
+                                if not enemy.alive:
+                                    enemies.remove(enemy)
+
 
 
             # TODO: Add you events code
+
+
 
 
 
