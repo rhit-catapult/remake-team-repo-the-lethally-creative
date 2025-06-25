@@ -1,5 +1,3 @@
-
-
 import pygame
 import sys
 import my_character
@@ -10,13 +8,13 @@ class Knight(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface, x, y):
         super(Knight, self).__init__()
         self.image = pygame.image.load("Idle.png")
+        #This Knight sprite came from craftpix-net-803217-free-knight-character-sprites-pixel-art.zip-
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.screen = screen
         self.x = x
         self.y = y
-        self.image_still = self.image
-
+        self.image_attack = pygame.image.load("Attack 3.png")
         self.velocity_y = 0
         self.health = 100
 
@@ -31,6 +29,7 @@ class Knight(pygame.sprite.Sprite):
         self.attack_duration = 200
 
         self.attack_animation_images = [pygame.image.load("Attack 3.png")]
+        #This sprite came from craftpix-net-803217-free-knight-character-sprites-pixel-art.zip
 
         self.attack_frame_index = 0
 
@@ -48,8 +47,8 @@ class Knight(pygame.sprite.Sprite):
 
                 attack_height = 50
 
-                return pygame.Rect(self.x + self.image_still.get_width() / 2,
-                                   self.y + self.image_still.get_height() / 4, attack_width, attack_height)
+                return pygame.Rect(self.x + self.image.get_width() / 2,
+                                   self.y + self.image.get_height() / 4, attack_width, attack_height)
 
             return None
 
@@ -61,7 +60,7 @@ class Knight(pygame.sprite.Sprite):
 
         health_bar_height = 15
 
-        health_bar_x = self.x + 15
+        health_bar_x = self.x + 20
 
         health_bar_y = self.y - 0
 
@@ -71,10 +70,12 @@ class Knight(pygame.sprite.Sprite):
         pygame.draw.rect(self.screen, (0, 255, 0),(health_bar_x,health_bar_y,current_health_width, health_bar_height))
 
     def rect(self):
-        return pygame.Rect(self.x, self.y, self.image_still.get_width(), self.image_still.get_height())
+        return pygame.Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
 
     def knight(self):
         if self.is_attacking:
+
+            self.image = self.image_attack
 
             now = pygame.time.get_ticks()
 
@@ -189,6 +190,7 @@ def game_over_screen(screen, score, level, song_length):
 def main():
     pygame.init()
     image1 = pygame.image.load("output-onlinepngtools.jpg")
+    #This Background is an image Owyn found online and pixelated with onlinetools.com.
     color1 = pygame.Color('black')
     pygame.mixer.music.load("The Trooper (1998 Remaster).mp3")
     pygame.mixer.music.play()
@@ -252,6 +254,8 @@ def main():
                 if event.key == pygame.K_e:
                     game_over_screen(screen, score, level, song_length)
                     return
+                if event.key == pygame.K_a:
+                        knight.is_attacking = True
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     knight.is_attacking = False
@@ -273,12 +277,10 @@ def main():
             knight.x = knight.x - 5
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
-        if pressed_keys == pygame.K_a:
-            knight.attack()
 
 
-        knight_width = knight.image_still.get_width()
-        knight_height = knight.image_still.get_height()
+        knight_width = knight.image.get_width()
+        knight_height = knight.image.get_height()
         knight.x = max(0, min(knight.x, WIDTH - knight_width))
 
 
