@@ -76,11 +76,11 @@ class Knight(pygame.sprite.Sprite):
         self.screen.blit(self.image, (self.x, self.y))
         health_bar_width = 50
         health_bar_height = 15
-        health_bar_x = self.x + 15
-        health_bar_y = self.y -10
+        health_bar_x = self.x
+        health_bar_y = self.y -15
 
         current_health_width = (self.hit_points)* health_bar_width//3
-        print(current_health_width)
+       
         pygame.draw.rect(self.screen, (50, 50, 50),(health_bar_x, health_bar_y, health_bar_width, health_bar_height))
 
         if self.hit_points == 3:
