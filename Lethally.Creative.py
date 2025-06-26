@@ -9,14 +9,14 @@ import time
 class Knight:
     def __init__(self, screen: pygame.Surface, x, y, idle_filename, attack_filename):
         self.image = pygame.image.load(idle_filename)
-        #This Knight sprite came from craftpix-net-803217-free-knight-character-sprites-pixel-art.zip-
+        #This Knight sprite was acquired by Owyn Steele at the Website https://craftpix.net
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.screen = screen
         self.x = x
         self.y = y
         self.image_attack = pygame.image.load(attack_filename)
-        # This Knight sprite came from craftpix-net-803217-free-knight-character-sprites-pixel-art.zip-
+        # This Knight sprite was acquired by Owyn Steele at the Website https://craftpix.net
         self.velocity_y = 0
         self.health = 100
         self.max_health = 100
@@ -25,12 +25,15 @@ class Knight:
         self.attack_cooldown = 0
         self.last_attack_time = 0
         self.attack_duration = 200
-        self.attack_animation_images = [pygame.image.load("Attack 3.png")]
         #This sprite came from craftpix-net-803217-free-knight-character-sprites-pixel-art.zip
         self.attack_frame_index = 0
         self.last_frame_update = pygame.time.get_ticks()
         self.animation_speed = 100
         self.facing_right = True
+
+        self.hit_points = 3
+        self.last_hit_time = 0
+
 
 
 
@@ -55,24 +58,53 @@ class Knight:
 
         health_bar_x = self.x + 15
 
-        health_bar_y = self.y - 0
+        health_bar_y = self.y - 10
 
-        current_health_width = (self.health / self.max_health * health_bar_width)
+        current_health_width = (self.hit_points // 3) * health_bar_width
 
-        pygame.draw.rect(self.screen, (0, 0, 255),(health_bar_x, health_bar_y, health_bar_width, health_bar_height))
-        pygame.draw.rect(self.screen, (0, 255, 0),(health_bar_x,health_bar_y,current_health_width, health_bar_height))
+        health_bar_width = 50
+        health_bar_height = 15
+        health_bar_x = self.x
+        health_bar_y = self.y -15
 
-        if self.is_not_attacking:
+        current_health_width = self.hit_points * health_bar_width//3
+
+        pygame.draw.rect(self.screen, (50, 50, 50),(health_bar_x, health_bar_y, health_bar_width, health_bar_height))
+
+        if self.hit_points == 3:
+            bar_color = (0, 255, 0)  # Green
+        elif self.hit_points == 2:
+            bar_color = (255, 255, 0)  # Yellow
+        elif self.hit_points == 1:
+            bar_color = (255, 0, 0)#red
+        else:
+            bar_color = (0, 0, 0)  # invisible
+
+        if not self.is_attacking:
             current_image = self.image
         if self.is_attacking:
             current_image = self.image_attack
-            now = pygame.time.get_ticks()
-            if now - self.last_frame_update > self.animation_speed:
-                self.last_frame_update = now
         if not self.facing_right:
             current_image = pygame.transform.flip(current_image, True, False)
 
         self.screen.blit(current_image, (self.x, self.y))
+
+        if self.hit_points > 0:
+            pygame.draw.rect(self.screen, bar_color, (health_bar_x, health_bar_y, current_health_width, health_bar_height))
+
+        # Draw health bar background (gray for neutral)
+        pygame.draw.rect(self.screen, (50, 50, 50),
+                         (health_bar_x, health_bar_y, health_bar_width, health_bar_height))
+        # Draw actual health
+        pygame.draw.rect(self.screen, bar_color,
+                         (health_bar_x, health_bar_y, current_health_width, health_bar_height))
+
+        if self.hit_points == 3:
+                bar_color = (0,255, 0)
+        elif self.hit_points == 2:
+                bar_color = (255, 255, 0)
+        else:
+                bar_color = (255, 0, 0)
 
     def rect(self):
         return pygame.Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
@@ -274,8 +306,8 @@ def main():
                         Knight.is_not_attacking = False
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
-                    knight.is_attacking = False
-                    Knight.is_not_attacking = True
+                        knight.is_attacking = False
+                        knight.is_not_attacking = True
 
 
 
@@ -315,6 +347,9 @@ def main():
         knight_width = knight.image.get_width()
         knight_height = knight.image.get_height()
         knight.x = max(0, min(knight.x, WIDTH - knight_width))
+
+
+
 
         # TODO: use physics to move knight
         knight.velocity_y += 1
@@ -386,17 +421,17 @@ def main():
         for platform in platforms:
              platform.draw(screen)
 
-
         for enemy in enemies[:]:
             enemy.update()
             enemy.draw()
-        if knight.rect.colliderect(enemy.rect) and enemy.alive:
-            exp_orbs.append(enemy.hit())
-            score += 20
-            if not enemy.alive:
-                enemies.remove(enemy)
-            else:
-                enemy.draw()
+            if knight.rect.colliderect(enemy.rect) and enemy.alive:
+                current_time = pygame.time.get_ticks()
+                if current_time - knight.last_hit_time > 1000:
+                    knight.hit_points -= 1
+                    knight.health = knight.hit_points / 3 * knight.max_health
+                    knight.last_hit_time = current_time
+                    if knight.hit_points <= 0:
+                        return game_over_screen(screen, score, level, song_length)
 
         if knight.rect.colliderect(enemy.rect) and enemy.alive:
             if not enemy.alive:
