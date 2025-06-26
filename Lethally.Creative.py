@@ -265,7 +265,7 @@ def main():
 
             enemies.append(new_enemy)
 
-            enemy_spawn_timer = 0
+            enemy_spawn_timer = 1
 
             enemy_spawn_delay = random.randint(60, 180)
 
