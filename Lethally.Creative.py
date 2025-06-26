@@ -6,38 +6,31 @@ import my_character
 import random
 import time
 
-class Knight(pygame.sprite.Sprite):
-    def __init__(self, screen: pygame.Surface, x, y):
-        super(Knight, self).__init__()
-        self.image = pygame.image.load("Idle.png")
+class Knight:
+    def __init__(self, screen: pygame.Surface, x, y, idle_filename, attack_filename):
+        self.image = pygame.image.load(idle_filename)
         #This Knight sprite came from craftpix-net-803217-free-knight-character-sprites-pixel-art.zip-
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.screen = screen
         self.x = x
         self.y = y
-        self.image_attack = pygame.image.load("Attack 3.png")
+        self.image_attack = pygame.image.load(attack_filename)
+        # This Knight sprite came from craftpix-net-803217-free-knight-character-sprites-pixel-art.zip-
         self.velocity_y = 0
         self.health = 100
-
         self.max_health = 100
-
         self.is_attacking = False
-
+        self.is_not_attacking = True
         self.attack_cooldown = 0
-
         self.last_attack_time = 0
-
         self.attack_duration = 200
-
         self.attack_animation_images = [pygame.image.load("Attack 3.png")]
         #This sprite came from craftpix-net-803217-free-knight-character-sprites-pixel-art.zip
-
         self.attack_frame_index = 0
-
         self.last_frame_update = pygame.time.get_ticks()
-
         self.animation_speed = 100
+        self.facing_right = True
 
 
 
@@ -56,8 +49,6 @@ class Knight(pygame.sprite.Sprite):
 
 
     def draw(self):
-        self.screen.blit(self.image, (self.x, self.y))
-
         health_bar_width = 50
 
         health_bar_height = 15
@@ -71,19 +62,40 @@ class Knight(pygame.sprite.Sprite):
         pygame.draw.rect(self.screen, (0, 0, 255),(health_bar_x, health_bar_y, health_bar_width, health_bar_height))
         pygame.draw.rect(self.screen, (0, 255, 0),(health_bar_x,health_bar_y,current_health_width, health_bar_height))
 
+        if self.is_not_attacking:
+            current_image = self.image
+        if self.is_attacking:
+            current_image = self.image_attack
+            now = pygame.time.get_ticks()
+            if now - self.last_frame_update > self.animation_speed:
+                self.last_frame_update = now
+        if not self.facing_right:
+            current_image = pygame.transform.flip(current_image, True, False)
+
+        self.screen.blit(current_image, (self.x, self.y))
+
     def rect(self):
         return pygame.Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
 
-    def knight(self):
-        if self.is_attacking:
+    def attack(self):
 
-            self.image = self.image_attack
+        current_time = pygame.time.get_ticks()
 
-            now = pygame.time.get_ticks()
+        if current_time - self.last_attack_time >= self.attack_cooldown:
+            self.is_attacking = True
 
-            if now - self.last_frame_update > self.animation_speed:
-                self.last_frame_update = now
+            self.attack_frame_index = 0
 
+            self.last_frame_update = current_time
+
+            self.last_attack_time = current_time
+
+            return True
+
+        return False
+
+    def set_direction(self, facing_right):
+        self.facing_right = facing_right
 
 
 
@@ -192,6 +204,7 @@ def game_over_screen(screen, score, level, song_length):
 def main():
     pygame.init()
     image1 = pygame.image.load("output-onlinepngtools.jpg")
+    #This image from YouTube video: https://www.youtube.com/watch?v=wZo45IPcBug
     #This Background is an image Owyn found online and pixelated with onlinetools.com.
     color1 = pygame.Color('black')
     pygame.mixer.music.load("The Trooper (1998 Remaster).mp3")
@@ -206,7 +219,7 @@ def main():
     pygame.display.set_caption("Slime Slayer")
     screen = pygame.display.set_mode((1280, 720))
 
-    knight = Knight(screen, 100, 400)
+    knight = Knight(screen, 100, 400, "Idle.png", "Attack 3.png")
 
     platform1 = Platform(0, 550, 1500, 350, )
     platforms = [platform1]
@@ -258,9 +271,11 @@ def main():
                     return
                 if event.key == pygame.K_a:
                         knight.is_attacking = True
-            if event.type == pygame.KEYUP:
+                        Knight.is_not_attacking = False
+            elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     knight.is_attacking = False
+                    Knight.is_not_attacking = True
 
 
 
@@ -282,51 +297,24 @@ def main():
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_LEFT]:
             knight.x = knight.x - 5
+            knight.facing_right = False
         if pressed_keys[pygame.K_RIGHT]:
             knight.x = knight.x + 5
+            knight.facing_right = True
+
         clamp_margin = 20
         knight.x = max(0,min (knight.x, WIDTH - clamp_margin))
 
         knight.rect.topleft =(knight.x, knight.y)
-
-        if pressed_keys == pygame.K_a:
-            if event == pygame.K_a:
-                knight.attack()
 
 
         knight_width = knight.image.get_width()
         knight_height = knight.image.get_height()
 
 
-        knight_width = knight.image_still.get_width()
-        knight_height = knight.image_still.get_height()
+        knight_width = knight.image.get_width()
+        knight_height = knight.image.get_height()
         knight.x = max(0, min(knight.x, WIDTH - knight_width))
-
-
-
-
-
-
-
-
-
-
-        def attack(self):
-
-            current_time = pygame.time.get_ticks()
-
-            if current_time - self.last_attack_time >= self.attack_cooldown:
-                self.is_attacking = True
-
-                self.attack_frame_index = 0
-
-                self.last_frame_update = current_time
-
-                self.last_attack_time = current_time
-
-                return True
-
-            return False
 
         # TODO: use physics to move knight
         knight.velocity_y += 1
